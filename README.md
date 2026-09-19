@@ -3,201 +3,269 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node.js](https://img.shields.io/badge/Node.js-v18+-green.svg)](https://nodejs.org/)
 [![React](https://img.shields.io/badge/React-18-61dafb.svg)](https://react.dev/)
-[![Docker](https://img.shields.io/badge/Docker-Sandboxing-2496ed.svg)](https://www.docker.com/)
+[![Docker](https://img.shields.io/badge/Docker-Sandboxed-2496ed.svg)](https://www.docker.com/)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4479a1.svg)](https://www.mysql.com/)
 
 CodeForge is a full-stack online judge and secure code execution platform built with **React**, **Node.js**, **Express**, **MySQL**, and **Docker**. Inspired by platforms like LeetCode and HackerRank, CodeForge provides an interactive browser IDE powered by Monaco Editor to write, test, and evaluate Python, Java, and C++ code against sample and hidden test suites inside ephemeral, resource-isolated Docker containers.
 
 ---
 
-## 📸 Screenshots & UI Preview
+## 🔗 Project Links
 
-```
-+--------------------------------------------------------------------------------------------------+
-|  [>] CodeForge Sandbox       Problems    Online Editor    Dashboard    Submissions    [Admin]     |
-+--------------------------------------------------------------------------------------------------+
-|  Two Sum (Easy)                         |  [ Python 3.11 v ]  [Reset]  [Run Code]  [Submit]      |
-|                                         |--------------------------------------------------------|
-|  Given an array of integers nums and an |  1  def two_sum(nums, target):                         |
-|  integer target, return 0-based indices |  2      lookup = {}                                    |
-|  of the two numbers that add to target. |  3      for i, num in enumerate(nums):                 |
-|                                         |  4          diff = target - num                        |
-|  Constraints:                           |  5          if diff in lookup:                         |
-|  * 2 <= nums.length <= 10^4             |  6              return [lookup[diff], i]               |
-|  * -10^9 <= nums[i] <= 10^9             |  7          lookup[num] = i                            |
-|                                         |--------------------------------------------------------|
-|  Examples:                              |  [ Sample Tests ]  [ Custom Input ]  [ Result ]        |
-|  Input: nums = [2,7,11,15], target = 9  |  [PASS] Case 1: Input: [2,7,11,15], 9 -> Output: 0 1   |
-|  Output: 0 1                            |  [PASS] Case 2: Input: [3,2,4], 6     -> Output: 1 2   |
-|                                         |  Status: ACCEPTED | Runtime: 18ms | Memory: 16MB       |
-+--------------------------------------------------------------------------------------------------+
-```
+* **Source Code Repository:** [https://github.com/Lahari-333/CodeForge](https://github.com/Lahari-333/CodeForge)
+* **Frontend Live Demo:** [https://client-omega-cyan-91.vercel.app/](https://client-omega-cyan-91.vercel.app/)
+* **Backend API (Local / Dedicated Host):** `http://localhost:5000` (Health: `/api/health`)
+
+> [!NOTE]
+> **Architecture Clarification:** The Vercel deployment hosts the production React SPA frontend. CodeForge's backend executes untrusted user submissions inside real, kernel-isolated Docker containers with strict resource quotas. Because serverless environments (e.g., Vercel Serverless) do not permit spawning child Docker containers, the execution backend runs in environments with Docker daemon access (local development or a dedicated VPS / Cloud VM).
 
 ---
 
-## 🚀 Key Features
+## 1. Project Overview
 
-* **Multi-Language Sandboxing:** Securely compile and execute Python 3.11, OpenJDK 17 Java, and GCC 13 C++ inside ephemeral Docker containers.
-* **Strict Resource Restrictions:** 128 MB RAM limits, 0.5 CPU quotas, max 64 PIDs (fork-bomb prevention), 5-second watchdog timeouts, and disabled networking (`--network none`).
-* **Monaco Code Editor:** Browser IDE with syntax highlighting, automatic indentation, bracket matching, line numbers, and dark theme support.
-* **Interactive Sandbox & Problem Solving:** Freeform code runner with custom standard input (stdin), plus 10 curated algorithmic problems spanning Easy, Medium, and Hard difficulties.
-* **Automated Grading & Test Normalization:** Grades submissions against public sample test cases and protected hidden test suites, automatically handling CRLF conversions and trailing whitespace.
-* **Submission History & Analytics:** Tracks runtime execution time (ms), memory usage (MB), test pass rates, and offers read-only code review modals for previous submissions.
-* **Interactive Developer Dashboard:** Real-time analytics, 7-day submission volume charts powered by Recharts, and difficulty breakdown progress rings.
+CodeForge is designed to simulate a real-world coding assessment platform with a strong emphasis on sandbox security, automated evaluation, and clean developer experience:
+
+* **Interactive Coding:** Users can select problems, write solutions in Python 3.11, Java 17, or C++17, and test them with custom standard input or sample test cases.
+* **Automated Judging:** Submissions are automatically compiled (for Java and C++), executed inside unprivileged Docker containers, evaluated against hidden test cases, and assigned verdicts (Accepted, Wrong Answer, Time Limit Exceeded, Memory Limit Exceeded, Compilation Error, Runtime Error).
+* **Developer Analytics:** Track submission history, pass rates, language breakdown, execution runtimes, and memory usage over time.
+* **Role-Based Administration:** Administrators can manage problems and configure test cases directly through a dedicated admin dashboard.
+
+---
+
+## 2. Key Features
+
+* **Multi-Language Sandboxing:** Securely compile and execute Python 3.11, OpenJDK 17 Java, and GCC 13 C++ inside ephemeral containers.
+* **Strict Resource Restrictions:** 128 MB RAM limit, 0.5 CPU quota, max 64 PIDs (fork-bomb prevention), 5-second execution timeout, and disabled networking (`--network none`).
+* **Monaco Code Editor:** Browser IDE with syntax highlighting, automatic indentation, bracket matching, line numbers, and dark theme (`vs-dark`).
+* **Problem Library:** 10 curated algorithmic problems across Easy, Medium, and Hard difficulty levels with 52 total test cases.
+* **Automated Test Evaluation:** Grades code against public sample cases and protected hidden test cases, normalizing line endings (CRLF to LF) and trailing whitespace.
+* **Submission History & Analytics:** Tracks runtime execution time (ms), memory usage (MB), test pass rates, and offers read-only code review modals for historical submissions.
+* **Interactive Developer Dashboard:** Real-time analytics, 7-day submission volume charts powered by Recharts, and difficulty breakdown progress indicators.
 * **Role-Based Admin Panel:** Administrative interface with server-side authorization to create, edit, and delete problems and test cases.
 
 ---
 
-## 🛠️ Technology Stack
+## 3. Tech Stack
 
-| Layer | Technology |
-| :--- | :--- |
-| **Frontend** | React 18, Vite, JavaScript, Tailwind CSS, React Router v6, Axios, Monaco Editor, Lucide React, Recharts |
-| **Backend** | Node.js, Express.js, JavaScript, REST APIs, JWT Authentication, bcryptjs, Helmet, Morgan, CORS |
-| **Database** | MySQL 8.0 (Relational schema with InnoDB, foreign keys with CASCADE, optimized indexes) |
-| **Code Execution** | Docker (Isolated ephemeral containers, non-root users, resource quotas) |
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Frontend** | React 18, Vite, JavaScript, Tailwind CSS | Single Page Application (SPA) with responsive dark UI |
+| **Code Editor** | Monaco Editor (`@monaco-editor/react`) | In-browser code editing with language syntax support |
+| **Routing & State** | React Router v6, React Context API | Client-side routing and centralized Auth/Toast state |
+| **Visualizations** | Recharts, Lucide React | Dashboard performance charts and developer UI icons |
+| **Backend API** | Node.js, Express.js | RESTful API server, middleware, and request validation |
+| **Authentication** | JWT (`jsonwebtoken`), `bcryptjs` | Stateless token authentication and salted password hashing |
+| **Security Headers** | Helmet, CORS | HTTP security headers and configurable origin policies |
+| **Database** | MySQL 8.0 (`mysql2/promise`) | Relational database with connection pooling and transactions |
+| **Execution Engine** | Docker Desktop / Docker Engine | Containerized sandbox with cgroups resource limits |
 
 ---
 
-## 📂 Architecture Overview
+## 4. Architecture Overview
+
+The following diagram illustrates the high-level architecture and data flow of CodeForge:
 
 ```mermaid
 flowchart TD
-    subgraph ClientLayer ["Frontend Client (React + Vite)"]
-        UI["Tailwind CSS Developer UI"]
-        Monaco["Monaco Editor (vs-dark)"]
-        Router["React Router v6"]
-        AxiosClient["Axios HTTP Client + JWT Interceptors"]
-    end
+    User["Developer / Client Browser"]
+    Client["React Frontend (Monaco Editor + Tailwind)"]
+    API["Express.js REST API"]
+    Auth["JWT Authentication & RBAC Middleware"]
+    DB["MySQL 8.0 Database"]
+    Engine["Docker Execution Engine"]
+    Java["codeforge-java Sandbox"]
+    Python["codeforge-python Sandbox"]
+    CPP["codeforge-cpp Sandbox"]
+    Normalizer["Output Normalizer"]
+    Evaluator["Test Suite Evaluator"]
+    History["Submission & Execution History"]
 
-    subgraph ServerLayer ["Backend REST API (Node.js + Express)"]
-        ExpressApp["Express.js Server"]
-        AuthMid["JWT Authentication & RBAC Middleware"]
-        Validators["Input Validation Layer"]
-        Controllers["REST Controllers"]
-        Services["Business Services (Auth, Problem, Execution, User)"]
-    end
-
-    subgraph SandboxLayer ["Docker Execution Sandbox"]
-        ExecMgr["Docker Execution Manager"]
-        TempWorkspace["Ephemeral Host Workspace (temp-exec/)"]
-        DockerCLI["Docker CLI (docker run / kill / rm)"]
-        JavaBox["codeforge-java Sandbox (Temurin 17 Alpine)"]
-        PyBox["codeforge-python Sandbox (Python 3.11 Alpine)"]
-        CppBox["codeforge-cpp Sandbox (GCC 13 Alpine)"]
-    end
-
-    subgraph DatabaseLayer ["Database Layer (MySQL 8.0)"]
-        UsersTab["users"]
-        ProblemsTab["problems"]
-        TestCasesTab["test_cases (sample + hidden)"]
-        SubmissionsTab["submissions"]
-        ExecHistoryTab["execution_history"]
-    end
-
-    ClientLayer -->|HTTP REST / JSON (JWT)| ExpressApp
-    ExpressApp --> AuthMid
-    AuthMid --> Validators
-    Validators --> Controllers
-    Controllers --> Services
-    Services -->|mysql2 connection pool| DatabaseLayer
-    Services -->|Spawn & Monitor| ExecMgr
-    ExecMgr --> TempWorkspace
-    ExecMgr --> DockerCLI
-    DockerCLI --> JavaBox
-    DockerCLI --> PyBox
-    DockerCLI --> CppBox
+    User --> Client
+    Client --> API
+    API --> Auth
+    API --> DB
+    API --> Engine
+    Engine --> Java
+    Engine --> Python
+    Engine --> CPP
+    Java --> Normalizer
+    Python --> Normalizer
+    CPP --> Normalizer
+    Normalizer --> Evaluator
+    Evaluator --> History
+    History --> DB
+    API --> Client
 ```
 
 ---
 
-## 🔄 Code Execution Flow
+## 5. Code Execution Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor User
+    actor User as User
     participant Client as React Client (Monaco)
     participant API as Express API
-    participant Sandbox as Docker Sandbox Engine
-    participant Docker as Docker Daemon
-    participant DB as MySQL 8.0
+    participant DB as MySQL Database
+    participant Engine as Docker Sandbox Engine
+    participant Runner as Docker Container
 
-    User->>Client: Clicks "Run Code" or "Submit"
-    Client->>API: POST /api/submissions/submit (JWT + Code)
-    API->>API: Validate language, code size (<64KB), stdin
-    API->>DB: Retrieve problem test cases (sample + hidden)
-
+    User->>Client: Click Run Code or Submit
+    Client->>API: POST /api/submissions/submit (JWT, Code, Language)
+    API->>API: Validate input size and language
+    API->>DB: Fetch problem test cases
     loop For each test case
-        API->>Sandbox: executeCode({ language, code, stdin })
-        Sandbox->>Sandbox: Create ephemeral host workspace (temp-exec/<uuid>)
-        Sandbox->>Sandbox: Write source file (Main.java / main.py / main.cpp)
-
-        opt Compiled Language (Java, C++)
-            Sandbox->>Docker: docker run --rm --network none ... compileCmd
-            alt Compilation Error
-                Docker-->>Sandbox: exitCode != 0 + compiler diagnostics
-                Sandbox-->>API: status: COMPILATION_ERROR
-            end
-        end
-
-        Sandbox->>Docker: docker run --rm --name codeforge-runner-<uuid> --network none --cpus 0.5 -m 128m --pids-limit 64 -i runCmd
-        Docker->>Docker: Stream stdin to container process
-
-        alt Timeout (>5000ms)
-            Sandbox->>Docker: docker kill codeforge-runner-<uuid>
-            Sandbox-->>API: status: TIME_LIMIT_EXCEEDED
-        else Exit Code 137 (OOM Killer)
-            Sandbox-->>API: status: MEMORY_LIMIT_EXCEEDED
-        else Normal Exit
-            Docker-->>Sandbox: stdout, stderr, exitCode
-            Sandbox-->>API: status: SUCCESS or RUNTIME_ERROR
-        end
-
-        Sandbox->>Sandbox: Purge host workspace (temp-exec/<uuid>)
-        API->>API: Output normalizer (CRLF conversion & whitespace trimming)
+        API->>Engine: executeCode(language, code, stdin)
+        Engine->>Engine: Create temporary workspace
+        Engine->>Runner: docker run (network none, memory 128m, cpus 0.5)
+        Runner-->>Engine: stdout, stderr, exit code
+        Engine->>Engine: Clean up temporary workspace
+        Engine-->>API: Raw execution result
+        API->>API: Normalize output (CRLF, trailing whitespace)
     end
-
-    API->>DB: INSERT INTO submissions (status, runtime, memory, passed_tests)
-    API-->>Client: Structured JSON Result (Status, runtime, memory, tests passed)
-    Client-->>User: Display status badges & diagnostic terminal
+    API->>DB: Record submission status and metrics
+    API-->>Client: Return verdict, runtime, and memory
+    Client-->>User: Render status badge and output console
 ```
 
 ---
 
-## 🔒 Security & Sandboxing Approach
+## 6. Secure Code Execution & Sandbox Isolation
 
-Executing arbitrary user-submitted code over the public web presents severe security risks. CodeForge enforces practical multi-layer containerized sandboxing:
+Executing arbitrary user-submitted code presents inherent security challenges. CodeForge implements multi-layered defensive controls to mitigate common attack vectors:
 
-1. **No Host Execution:** Arbitrary code is NEVER executed on the host server process.
-2. **Network Isolation:** All containers run with `--network none`, preventing external network calls, socket scanning, or data exfiltration.
-3. **Strict Resource Quotas:**
-   * **RAM Limit:** 128 MB memory limit (`-m 128m --memory-swap 128m`).
-   * **CPU Limit:** 0.5 CPU core quota (`--cpus 0.5`).
-   * **Process Limit:** Max 64 PIDs (`--pids-limit 64`), completely neutralizing fork-bombs (`:(){ :|:& };:`).
-4. **Watchdog Timers:** 5000ms wall-clock timeout with forceful container kill (`docker kill`).
-5. **Non-Root Execution:** Container images run under restricted unprivileged user `runner` (uid 1001).
-6. **Mount Isolation:** Containers only mount an ephemeral workspace (`temp-exec/<uuid>`); host root and the Docker socket (`/var/run/docker.sock`) are never mounted.
-7. **Secret Isolation:** Host environment variables and database passwords are never passed into execution containers.
-8. **Buffer Capping:** Standard output is capped at 64 KB; runaway print loops return `OUTPUT_LIMIT_EXCEEDED`.
-9. **Ephemeral Cleanup:** Containers use `--rm` and workspace directories are deleted in `finally` blocks.
-10. **Hidden Test Privacy:** Public endpoints strictly filter `test_cases` by `is_sample = TRUE`. Hidden inputs and outputs are never delivered to the browser.
+| Defense Layer | Implemented Control | Threat Mitigated |
+| :--- | :--- | :--- |
+| **Network Isolation** | `--network none` flag on all execution containers | Prevents SSRF, outbound data exfiltration, and socket scanning |
+| **Memory Ceiling** | `-m 128m --memory-swap 128m` | Prevents memory exhaustion attacks and host RAM denial of service |
+| **CPU Throttling** | `--cpus 0.5` quota | Prevents 100% CPU thread starvation across host cores |
+| **PID Ceiling** | `--pids-limit 64` | Completely neutralizes fork-bombs and runaway process spawning |
+| **Execution Watchdog** | 5000ms wall-clock timeout + `docker kill` | Mitigates infinite loops and hung I/O calls |
+| **Filesystem Isolation** | Ephemeral `/workspace` mount only | Containers cannot access host files, secrets, or parent directories |
+| **Input Redirection** | Stdin piped via `< input.txt` | Ensures clean EOF handling without OS pipe deadlocks |
+| **Output Buffer Cap** | 64 KB stdout/stderr buffer ceiling | Prevents host disk and memory flooding from infinite print loops |
+| **Non-Root Execution** | Custom unprivileged user `runner` (uid 1001) | Minimizes potential container-escape attack surfaces |
+| **Hidden Test Privacy** | Public endpoints filter by `is_sample = TRUE` | Hidden test inputs and expected outputs are never leaked to client |
 
 ---
 
-## 💻 Supported Languages & Starter Templates
+## 7. Supported Languages & Runtime Environment
 
-| Language | Version | Dockerfile Base | Compile Command | Run Command |
+| Language | Version | Base Image | Compilation Step | Execution Command |
 | :--- | :--- | :--- | :--- | :--- |
-| **Python** | 3.11 | `python:3.11-alpine` | N/A (Interpreted) | `python -u main.py` |
-| **Java** | OpenJDK 17 | `eclipse-temurin:17-jdk-alpine` | `javac Main.java` | `java -Xmx128m Main` |
-| **C++** | GCC 13 (C++17) | `alpine:3.19` (g++, musl-dev) | `g++ -O2 main.cpp -o main` | `./main` |
+| **Python** | 3.11 | `codeforge-python:latest` (`python:3.11-alpine`) | Interpreted (None) | `python -u main.py < input.txt` |
+| **Java** | OpenJDK 17 | `codeforge-java:latest` (`eclipse-temurin:17-jdk-alpine`) | `javac Main.java` | `java -Xmx128m Main < input.txt` |
+| **C++** | GCC 13 (C++17) | `codeforge-cpp:latest` (`alpine:3.19` g++, musl-dev) | `g++ -O2 main.cpp -o main` | `./main < input.txt` |
 
 ---
 
-## ⚙️ Environment Variables Reference
+## 8. Project Structure
 
-File: `server/.env` (see `.env.example` for templates)
+```
+CodeForge/
+├── client/                     # React + Vite Frontend
+│   ├── src/
+│   │   ├── components/         # CodeEditor, OutputPanel, Navbar, ProblemCard, etc.
+│   │   ├── context/            # AuthContext, ToastContext
+│   │   ├── pages/              # LandingPage, ProblemsPage, ProblemDetailPage, AdminPage, etc.
+│   │   ├── services/           # api.js, authService.js, executionService.js
+│   │   ├── constants/          # Language starters and configurations
+│   │   └── App.jsx             # Route definitions and layouts
+│   ├── index.html
+│   ├── tailwind.config.js
+│   ├── vercel.json             # SPA rewrite routing
+│   └── package.json
+│
+├── server/                     # Node.js + Express REST Backend
+│   ├── src/
+│   │   ├── config/             # Database connection pool (db.js) and constants
+│   │   ├── controllers/        # auth, problem, submission, execution, user
+│   │   ├── middleware/         # authMiddleware, adminMiddleware, errorMiddleware
+│   │   ├── routes/             # REST endpoint route registrations
+│   │   ├── services/           # Business logic layers
+│   │   ├── execution/          # dockerEngine.js (Docker sandbox manager)
+│   │   ├── utils/              # outputNormalizer.js, responseHelper.js
+│   │   ├── validators/         # Input validation schemas
+│   │   └── server.js           # Server bootstrap and service health checks
+│   ├── tests/                  # Jest & Supertest automated test suites
+│   │   ├── unit.test.js        # Output normalizer and constants unit tests
+│   │   └── api.test.js         # API integration and authentication tests
+│   └── package.json
+│
+├── docker/                     # Docker sandbox image definitions
+│   ├── java/Dockerfile        # OpenJDK 17 Alpine runner
+│   ├── python/Dockerfile      # Python 3.11 Alpine runner
+│   └── cpp/Dockerfile         # GCC 13 Alpine runner
+│
+├── docs/                       # Architectural and security documentation
+│   ├── architecture.md
+│   ├── execution-flow.md
+│   ├── security.md
+│   └── api.md
+│
+├── schema.sql                  # MySQL database schema (InnoDB, foreign keys)
+├── seed.sql                    # Initial seed data (10 problems, 52 test cases)
+├── .env.example                # Safe environment variable template
+├── .gitignore                  # Git exclusion rules
+└── README.md                   # Project documentation
+```
+
+---
+
+## 9. Database Architecture & Seed Data
+
+CodeForge uses a relational MySQL 8 schema designed with foreign key constraints, cascading deletes, and indexes:
+
+* **`users`**: User credentials (bcrypt-hashed passwords), email, username, role (`USER`, `ADMIN`), timestamps.
+* **`problems`**: Title, slug, difficulty (`EASY`, `MEDIUM`, `HARD`), description, constraints, starter templates.
+* **`test_cases`**: Linked to problems; includes input, expected output, order index, and `is_sample` flag.
+* **`submissions`**: Tracks user submissions with language, code, status verdict, runtime (ms), memory (MB), and passed tests.
+* **`execution_history`**: Freeform sandbox executions with custom input and terminal output diagnostics.
+
+### Pre-Configured Seed Accounts:
+* **Admin Account:** Username: `admin` | Password: `AdminPassword@123` | Role: `ADMIN`
+* **Demo Developer:** Username: `demouser` | Password: `DemoPassword@123` | Role: `USER`
+
+---
+
+## 10. API Overview
+
+All API responses follow a consistent JSON format: `{ success: true, data: ... }` or `{ success: false, message: ... }`.
+
+### Authentication & Users
+* `POST /api/auth/register` — Register a new developer account
+* `POST /api/auth/login` — Authenticate and receive JWT
+* `GET /api/auth/me` — Retrieve current authenticated session profile
+* `GET /api/users/profile` — User statistics, problem solve counts, and accuracy
+* `GET /api/users/dashboard` — Dashboard submission history and 7-day activity metrics
+
+### Problems & Test Cases
+* `GET /api/problems` — List all published problems with difficulty filtering
+* `GET /api/problems/:slug` — Get problem details with sample test cases (hidden tests excluded)
+* `POST /api/problems` — Create a new problem (Admin only)
+* `PUT /api/problems/:id` — Update existing problem (Admin only)
+* `DELETE /api/problems/:id` — Remove problem (Admin only)
+
+### Execution & Submissions
+* `POST /api/execute` — Execute freeform code in sandbox with custom stdin
+* `POST /api/submissions/run` — Run code against problem sample test cases
+* `POST /api/submissions/submit` — Submit code against all sample and hidden test cases
+* `GET /api/submissions` — Retrieve authenticated user submission history
+* `GET /api/submissions/:id` — Retrieve submission details and code
+
+### System Health
+* `GET /api/health` — Returns status of API, database connection, and Docker engine
+
+---
+
+## 11. Environment Variables Reference
+
+Copy `.env.example` to create your local `server/.env`:
+
+```bash
+cp .env.example server/.env
+```
 
 ```env
 PORT=5000
@@ -208,7 +276,7 @@ CLIENT_URL=http://localhost:5173
 DB_HOST=localhost
 DB_PORT=3306
 DB_USER=root
-DB_PASSWORD="your_mysql_password"
+DB_PASSWORD=your_mysql_password
 DB_NAME=codeforge_db
 
 # Authentication
@@ -231,15 +299,36 @@ DOCKER_IMAGE_CPP=codeforge-cpp:latest
 
 ---
 
-## 🚀 Local Development Setup
+## 12. Docker Setup
+
+Ensure Docker Desktop or Docker Engine is running on your system, then build the execution images from the project root:
+
+```bash
+# Build Java sandbox image
+docker build -t codeforge-java:latest ./docker/java
+
+# Build Python sandbox image
+docker build -t codeforge-python:latest ./docker/python
+
+# Build C++ sandbox image
+docker build -t codeforge-cpp:latest ./docker/cpp
+```
+
+Verify images are built:
+```bash
+docker images codeforge-*
+```
+
+---
+
+## 13. Local Setup & Running the Application
 
 ### 1. Prerequisites
 * **Node.js**: v18+ (tested on `v24.16.0`)
-* **npm**: v9+ (tested on `v11.13.0`)
-* **MySQL Server**: 8.0 running locally on port 3306
-* **Docker Desktop**: (Installed and running with WSL2 on Windows, or Docker Engine on Linux/macOS)
+* **MySQL Server**: 8.0 running on port 3306
+* **Docker**: Docker Desktop (with WSL2 on Windows) or Docker Engine on Linux/macOS
 
-### 2. Clone and Install Dependencies
+### 2. Clone & Install
 ```bash
 git clone https://github.com/Lahari-333/CodeForge.git
 cd CodeForge
@@ -253,143 +342,106 @@ cd ../client
 npm install
 ```
 
-### 3. Initialize MySQL Database
+### 3. Database Initialization
 ```bash
-# Using Node seed script (recommended)
+# Run database seed script from server directory
 cd server
 node src/db/seed.js
-
-# Or using the MySQL CLI:
-mysql -u root -p -e "CREATE DATABASE IF NOT EXISTS codeforge_db;"
-mysql -u root -p codeforge_db < ../schema.sql
-mysql -u root -p codeforge_db < ../seed.sql
 ```
 
-#### Pre-Configured Seed Accounts:
-* **Admin Account:** Username: `admin` | Password: `AdminPassword@123` | Role: `ADMIN`
-* **Demo Developer:** Username: `demouser` | Password: `DemoPassword@123` | Role: `USER`
-
-### 4. Build Docker Execution Sandbox Images
-```bash
-# Build Java runner
-docker build -t codeforge-java:latest ./docker/java
-
-# Build Python runner
-docker build -t codeforge-python:latest ./docker/python
-
-# Build C++ runner
-docker build -t codeforge-cpp:latest ./docker/cpp
-```
-
-### 5. Start Backend & Frontend
-In Terminal 1 (Backend):
+### 4. Start the Application
+In Terminal 1 (Backend API):
 ```bash
 cd server
 npm run dev
-# Server running at http://localhost:5000
+# Running at http://localhost:5000
 ```
 
-In Terminal 2 (Frontend):
+In Terminal 2 (Frontend Client):
 ```bash
 cd client
 npm run dev
-# Client running at http://localhost:5173
+# Running at http://localhost:5173
 ```
 
 ---
 
-## 🧪 Testing Instructions
+## 14. Testing Instructions
 
-CodeForge includes a full Jest and Supertest suite verifying authentication, input validation, output normalization, RBAC permissions, and problem queries:
+CodeForge includes an automated Jest and Supertest suite:
 
 ```bash
 cd server
 npm test
 ```
 
-### Automated Test Results:
-* `PASS tests/unit.test.js`
-  * `normalizeOutput handles CRLF, trailing spaces, and blank lines`
-  * `compareOutputs returns true for equivalent outputs with different line endings`
-  * `compareOutputs returns false for different values`
-  * `supported languages include java, python, cpp`
-  * `execution statuses are all defined properly`
-* `PASS tests/api.test.js`
-  * `GET /api/health returns health status`
-  * `POST /api/auth/register fails on password mismatch`
-  * `POST /api/auth/register creates a new user successfully`
-  * `POST /api/auth/register rejects duplicate registration`
-  * `POST /api/auth/login rejects incorrect password`
-  * `POST /api/auth/login logs in regular demo user`
-  * `POST /api/auth/login logs in admin user`
-  * `GET /api/auth/me rejects unauthenticated request (401)`
-  * `GET /api/auth/me accepts authenticated request with token (200)`
-  * `GET /api/problems lists seeded coding problems`
-  * `GET /api/problems/two-sum returns problem and ONLY sample test cases (hidden tests protected)`
-  * `POST /api/problems rejects non-admin user (403 Forbidden)`
-  * `POST /api/problems allows ADMIN user (201 Created)`
-  * `POST /api/execute rejects invalid language (400)`
-  * `POST /api/execute rejects empty source code (400)`
-  * `GET /api/users/profile returns user profile with statistics`
-  * `GET /api/users/dashboard returns dashboard data`
-* **Test Suites: 2 passed, 2 total**
-* **Tests: 22 passed, 22 total**
+### Test Coverage Summary:
+* **Unit Tests (`tests/unit.test.js`)**: Output normalization (CRLF conversion, trailing whitespace trimming), output comparison equivalence, language configurations, execution status definitions.
+* **API Tests (`tests/api.test.js`)**: Health checks, user registration, duplicate prevention, password validation, JWT issuance and authentication middleware, role-based authorization (admin vs user), public problem queries, and hidden test case filtering.
+* **Result**: **22 passed, 22 total** across 2 test suites.
 
 ---
 
-## 🌐 Production Deployment Architecture
+## 15. Production Deployment Architecture
 
 ```
-[ Developer Browser ]
-         |
-         | HTTPS
-         v
-[ Vercel Static Edge CDN ]  -----> Serves React 18 SPA (client/dist)
-         |
-         | REST API / HTTPS
-         v
-[ Cloud VM / VPS (Ubuntu LTS) ]
-    ├── Nginx Reverse Proxy (SSL / Certbot)
-    ├── Node.js Express API Process (systemd / PM2)
-    └── Docker Engine Daemon
-            ├── codeforge-java Sandbox Container (isolated)
-            ├── codeforge-python Sandbox Container (isolated)
-            └── codeforge-cpp Sandbox Container (isolated)
-         |
-         | TLS
-         v
-[ Managed MySQL Database (AWS RDS / PlanetScale / Aiven) ]
+[ User Browser ]
+       |
+       | HTTPS
+       v
+[ Vercel Edge Network ]  -----> Serves React 18 SPA (client/dist)
+       |
+       | REST API / HTTPS
+       v
+[ Cloud VM / VPS (Ubuntu 22.04 LTS) ]
+    ├── Reverse Proxy (Nginx + SSL / Let's Encrypt)
+    ├── Node.js Express API (systemd / PM2)
+    └── Docker Daemon
+            ├── codeforge-java Sandbox (isolated container)
+            ├── codeforge-python Sandbox (isolated container)
+            └── codeforge-cpp Sandbox (isolated container)
+       |
+       | TLS (Port 3306)
+       v
+[ Managed MySQL Database (AWS RDS / DigitalOcean Managed DB) ]
 ```
 
-### Why a Dedicated VM / Docker-Enabled Host is Required for the Backend
-Standard serverless or container PaaS platforms (such as Render Web Services or Vercel Serverless) operate inside confined containers without root daemon privileges or access to `/var/run/docker.sock`. Because CodeForge executes user code inside genuine, isolated Docker containers with `--network none` and `--cpus 0.5`, the backend requires a host environment that provides native Docker daemon access (e.g. AWS EC2, DigitalOcean Droplet, Hetzner, or a Docker-in-Docker capable VM).
+### Hosting Requirements for Code Execution:
+Standard serverless or containerized PaaS platforms (e.g., Vercel Serverless, basic Render Web Services) run inside restricted containers without root daemon permissions or access to `/var/run/docker.sock`. Because CodeForge dynamically invokes `docker run` with strict kernel flags (`--network none`, `--cpus`, `-m`), the backend must run in an environment with native Docker daemon access (such as an AWS EC2 instance, DigitalOcean Droplet, or Hetzner VPS).
 
 ---
 
-## 🔗 Repository & Live Links
+## 16. Live Demo & Verified Links
 
+* **Frontend Live Demo:** [https://client-omega-cyan-91.vercel.app/](https://client-omega-cyan-91.vercel.app/)
 * **GitHub Repository:** [https://github.com/Lahari-333/CodeForge](https://github.com/Lahari-333/CodeForge)
-* **Frontend Demo:** Deployable to Vercel via `client/`
-* **Backend API Health Check:** `/api/health`
+* **Backend Status:** Runs locally or on a provisioned Docker-enabled VM.
 
 ---
 
-## ⚠️ Known Limitations & Future Improvements
+## 17. Security Model & Platform Constraints
+
+* **Defensive Sandbox Scope:** CodeForge implements multi-tenant Docker sandboxing with network isolation, non-root users, CPU/RAM quotas, PID limits, and watchdog timers.
+* **Kernel Sharing Limitation:** Standard Docker containers share the host Linux kernel. This architecture is suitable for developer portfolio demonstrations and educational platforms. Production commercial platforms (such as LeetCode or AWS Lambda) typically employ micro-virtualization layers (such as AWS Firecracker or Google gVisor `runsc`) to establish hardware-level boundaries.
+
+---
+
+## 18. Known Limitations & Future Improvements
 
 ### Known Limitations
-* **Local Kernel Sharing:** Docker containers share the host Linux kernel. While practical and robust for developer environments, multi-tenant cloud judges (e.g. LeetCode) typically utilize micro-virtualization (AWS Firecracker or Google gVisor `runsc`) for hardware-level boundary isolation.
-* **Windows Docker Desktop Dependency:** On Windows hosts, Docker Desktop must be running with WSL2 to execute code. If Docker is offline, CodeForge gracefully returns a structured `SYSTEM_ERROR` notification without crashing.
+* **Docker Daemon Dependency:** On Windows hosts, Docker Desktop must remain running with the WSL2 backend. If Docker is offline, the API returns a structured `SYSTEM_ERROR` without crashing.
+* **Synchronous Execution Pipeline:** Submissions currently execute sequentially per test case; high-concurrency loads benefit from a distributed Redis/BullMQ worker queue.
 
 ### Future Improvements
-* WebSockets / SSE for live streaming of standard output during long executions.
-* Google gVisor (`runsc`) OCI runtime integration for kernel-independent sandboxing.
-* Memory usage sampling via cgroups v2 (`memory.current`).
-* Contest mode and timed assessment challenges.
+* Integration of **Google gVisor (`runsc`)** for kernel-independent OCI sandboxing.
+* Asynchronous job queue using **Redis & BullMQ** with worker pool scaling.
+* Real-time output streaming via **WebSockets / Server-Sent Events (SSE)**.
+* Timed contests, leaderboard rankings, and user rating calculations.
 
 ---
 
-## 👤 Author
+## 19. Author & License
 
 * **Developer:** Lahari ([@Lahari-333](https://github.com/Lahari-333))
-* **Repository:** [https://github.com/Lahari-333/CodeForge](https://github.com/Lahari-333/CodeForge)
-* **License:** MIT License
+* **Project Repository:** [https://github.com/Lahari-333/CodeForge](https://github.com/Lahari-333/CodeForge)
+* **License:** [MIT License](LICENSE)
