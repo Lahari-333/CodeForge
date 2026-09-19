@@ -1,4 +1,4 @@
-﻿# Node dependencies
+# Node dependencies
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -34,3 +34,6 @@ temp/
 
 # Coverage reports
 coverage/
+
+# Vercel deployment artifacts
+.vercel/
