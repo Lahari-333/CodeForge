@@ -224,8 +224,8 @@ CodeForge uses a relational MySQL 8 schema designed with foreign key constraints
 * **`execution_history`**: Freeform sandbox executions with custom input and terminal output diagnostics.
 
 ### Pre-Configured Seed Accounts:
-* **Admin Account:** Username: `admin` | Password: `AdminPassword@123` | Role: `ADMIN`
-* **Demo Developer:** Username: `demouser` | Password: `DemoPassword@123` | Role: `USER`
+* **Admin Account:** Username: `xxxxxx` | Password: `xxxxxxxxxxxxx` | Role: `xxxxxxxx`
+* **Demo Developer:** Username: `xxxxxx` | Password: `xxxxxxxxxxx` | Role: `xxxxxx`
 
 ---
 
