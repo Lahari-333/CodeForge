@@ -1,0 +1,36 @@
+﻿# Node dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment files
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Build directories
+client/dist/
+client/build/
+dist/
+build/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+Thumbs.db
+
+# Temporary execution workspaces
+server/temp-exec/
+temp/
+*.log
+
+# Coverage reports
+coverage/
